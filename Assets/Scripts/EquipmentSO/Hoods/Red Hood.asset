@@ -13,5 +13,6 @@ MonoBehaviour:
   m_Name: Red Hood
   m_EditorClassIdentifier: 
   EquipmentName: Red Hood
-  EquipmentSprite: {fileID: 21300000, guid: 20eb058aea3c3a744bb5d47a1610550a, type: 3}
+  EquipmentSprite:
+  - {fileID: 21300000, guid: 20eb058aea3c3a744bb5d47a1610550a, type: 3}
   Type: 0

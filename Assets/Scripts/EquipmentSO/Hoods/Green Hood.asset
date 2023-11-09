@@ -13,5 +13,6 @@ MonoBehaviour:
   m_Name: Green Hood
   m_EditorClassIdentifier: 
   EquipmentName: Green Hood
-  EquipmentSprite: {fileID: 21300000, guid: f7e7bed775fff8347b9e53c67e20875f, type: 3}
+  EquipmentSprite:
+  - {fileID: 21300000, guid: f7e7bed775fff8347b9e53c67e20875f, type: 3}
   Type: 0

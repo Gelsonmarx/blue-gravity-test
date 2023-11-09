@@ -9,7 +9,7 @@ namespace BlueGravity.Inventory
     public class EquipmentObject : ScriptableObject
     {
         public string EquipmentName;
-        public Sprite EquipmentSprite;
+        public Sprite[] EquipmentSprite;
         public EquipmentType Type;
     }
 

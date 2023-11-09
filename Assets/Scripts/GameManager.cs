@@ -1,4 +1,5 @@
 using System;
+using BlueGravity.Inventory;
 using BlueGravity.Tools;
 using UnityEngine;
 
@@ -9,6 +10,12 @@ namespace BlueGravity.Core
         [SerializeField] int initialGold = 0;
         public int Gold { get; private set; } = 0;
         public event Action<int> OnWalletChange;
+
+        public PlayerInventory PlayerInventory {get; private set;}
+
+        private void Awake() {
+            PlayerInventory = FindObjectOfType<PlayerInventory>();
+        }
 
         private void Start()
         {

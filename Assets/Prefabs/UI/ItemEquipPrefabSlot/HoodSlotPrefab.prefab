@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 3675958965825679023}
   - component: {fileID: 8894820728391893050}
   - component: {fileID: 4210734050993750066}
+  - component: {fileID: 3798478028454292762}
   m_Layer: 5
   m_Name: HoodSlotPrefab
   m_TagString: Untagged
@@ -80,6 +81,21 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &3798478028454292762
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 612694072377634711}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: feade3c3cc0090a4496ebc0056999cc8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_slotimage: {fileID: 4325693552498451130}
+  m_slotItemNameText: {fileID: 5759149375607534232}
+  m_equipButton: {fileID: 3816164760030887638}
 --- !u!1 &2072794860311650318
 GameObject:
   m_ObjectHideFlags: 0

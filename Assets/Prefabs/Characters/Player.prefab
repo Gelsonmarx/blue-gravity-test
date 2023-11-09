@@ -1376,6 +1376,7 @@ GameObject:
   - component: {fileID: 1469414860536721672}
   - component: {fileID: 7878279785605434149}
   - component: {fileID: 1433094826626356635}
+  - component: {fileID: 6473536883073163167}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -1398,7 +1399,7 @@ Transform:
   - {fileID: 7667065839864769838}
   - {fileID: 4296905650696599770}
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2586143855622032821
 MonoBehaviour:
@@ -1452,7 +1453,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 0
+  m_Constraints: 4
 --- !u!61 &1433094826626356635
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -1498,6 +1499,45 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.6199809, y: 0.81440926}
   m_EdgeRadius: 0
+--- !u!114 &6473536883073163167
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5743962939391291520}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 49a13a6d132c5cf41b5fe3852ab0d5f7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_initialSet:
+  - {fileID: 11400000, guid: bfc160ad2e274cc4b9cef36eb6ee3758, type: 2}
+  - {fileID: 11400000, guid: 9e781ac3c9c96f84f95036ea503da75e, type: 2}
+  - {fileID: 11400000, guid: 69027add5a04ef547ac11028fef2ada3, type: 2}
+  - {fileID: 11400000, guid: 61e5562116f452a478c0e3a8e2c73f3f, type: 2}
+  - {fileID: 11400000, guid: a85b7277ed47e364798701897d45c19e, type: 2}
+  - {fileID: 11400000, guid: 28b763faa006ce646b15f6f95b7c7a2f, type: 2}
+  - {fileID: 11400000, guid: f94fca96a2daccd498d39498cbee2727, type: 2}
+  - {fileID: 11400000, guid: eca433ac4b52e5745b175a7ca873df1e, type: 2}
+  - {fileID: 11400000, guid: 8d056952dadf2d14cad2d42ae3c9d224, type: 2}
+  - {fileID: 11400000, guid: 1be14dd1ec988694e964a7653467b146, type: 2}
+  hoodRenderer: {fileID: 2669079210214413903}
+  maskRenderer: {fileID: 6605502948574287933}
+  shoulderRendererRight: {fileID: 2039666914114745771}
+  shoulderRendererLeft: {fileID: 2791473171840050682}
+  elbowRendererRight: {fileID: 331251692825215102}
+  elbowRendererLeft: {fileID: 5480841663793779213}
+  wristRendererRight: {fileID: 5773493480176244307}
+  wristRendererLeft: {fileID: 1902433034643766725}
+  torsoRenderer: {fileID: 4860061999036411321}
+  pelvisRenderer: {fileID: 3507220841813595804}
+  legRendererRight: {fileID: 2610711722748488409}
+  legRendererLeft: {fileID: 5779261090253536108}
+  bootsRendererRight: {fileID: 6106307650391299571}
+  bootsRendererLeft: {fileID: 7453036679689240494}
+  weaponRendererRight: {fileID: 6247474630844646684}
+  weaponRendererLeft: {fileID: 3172315379079107820}
 --- !u!1 &6026547343252380726
 GameObject:
   m_ObjectHideFlags: 0
