@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using BlueGravity.Core;
 using BlueGravity.Inventory;
@@ -24,6 +25,8 @@ namespace BlueGravity.UI
         [SerializeField] GameObject[] m_slotItemPrefabs;
         [SerializeField] Transform m_slotContentTransformParent;
 
+        List<ItemSlot> m_actualSlots = new List<ItemSlot>();
+
         private void Awake()
         {
             GameManager.Instance.OnWalletChange += UpdateGold;
@@ -31,7 +34,7 @@ namespace BlueGravity.UI
 
         private void Start()
         {
-            GameManager.Instance.PlayerInventory.OnEquipmentChange += UpdateSetImages;
+            GameManager.Instance.PlayerInventory.OnEquipmentChange += UpdateSetImagesAndSlots;
             var playerInput = GameManager.Instance.PlayerInventory.GetComponent<PlayerInput>();
             playerInput.inputControl.Ground.Inventory.performed += action => OpenCloseInventory();
             SetUpInventoryButtons();
@@ -40,32 +43,38 @@ namespace BlueGravity.UI
 
         void SetUpInventoryButtons()
         {
-            for (int i = 0; i < m_inventorySetButtons.Length; i++)
+            foreach (var _button in m_inventorySetButtons)
             {
-                m_inventorySetButtons[i].onClick.AddListener(() =>
-                {
-                    m_inventorySetButtons[i].image.color = m_buttonSelectedColor;
-                    if (m_slotContentTransformParent.childCount > 0)
-                    {
-                        //Cleaning
-                        for (int i = 0; i < m_slotContentTransformParent.childCount; i++)
-                        {
-                            Destroy(m_slotContentTransformParent.GetChild(i).gameObject);
-                        }
-                        //Getting Item list Type
-                        var _itemTypeList = GameManager.Instance.PlayerInventory.InventoryItems.Where(_item => _item.Type == (EquipmentType)i).ToList();
-                        //Instancing Slots
-                        if (_itemTypeList.Count > 0)
-                        {
-                            foreach (var _itemType in _itemTypeList)
-                            {
-                                var _slot = Instantiate(m_slotItemPrefabs[i], m_slotContentTransformParent);
-                                _slot.GetComponent<ItemSlot>().InitSlot(_itemType);
-                            }
-                        }
+                _button.onClick.AddListener(() =>
+                 {
 
-                    }
-                });
+                     //  m_inventorySetButtons[i].GetComponent<Image>().color = m_buttonSelectedColor;
+                     if (m_slotContentTransformParent.childCount > 0)
+                     {
+                         //Cleaning
+                         for (int j = 0; j < m_slotContentTransformParent.childCount; j++)
+                         {
+                             var _slotObj = m_slotContentTransformParent.GetChild(j).gameObject.GetComponent<ItemSlot>();
+                             m_actualSlots.Remove(_slotObj);
+                             Destroy(_slotObj.gameObject);
+                         }
+                     }
+                     var index = _button.transform.GetSiblingIndex();
+                     var _itemTypeList = GameManager.Instance.PlayerInventory.ListOfEquipmentObjectsOfType((EquipmentType)index);
+                     Debug.Log("List Items: " + _itemTypeList.Count + " i: " + index);
+                     //Instancing Slots
+                     if (_itemTypeList.Count > 0)
+                     {
+                         foreach (var _itemType in _itemTypeList)
+                         {
+                             var _slot = Instantiate(m_slotItemPrefabs[index], m_slotContentTransformParent);
+                             _slot.GetComponent<ItemSlot>().InitSlot(_itemType);
+                             m_actualSlots.Add(_slot.GetComponent<ItemSlot>());
+                         }
+                     }
+
+
+                 });
             }
         }
 
@@ -89,12 +98,18 @@ namespace BlueGravity.UI
             m_goldValueTxt.text = "X " + _amount;
         }
 
-        private void UpdateSetImages(EquipmentObject[] _actualSet)
+        private void UpdateSetImagesAndSlots(EquipmentObject[] _actualSet)
         {
             foreach (var _equipmentObject in _actualSet)
             {
                 int index = (int)_equipmentObject.Type;
                 m_actualSetImages[index].sprite = _equipmentObject.EquipmentSprite[0];
+            }
+
+            if (m_actualSlots.Count <= 0) return;
+            foreach (var _slot in m_actualSlots)
+            {
+                _slot.UpdateEquipButton(_actualSet);
             }
         }
 

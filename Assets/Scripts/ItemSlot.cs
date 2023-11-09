@@ -25,26 +25,14 @@ namespace BlueGravity.UI
             {
                 GameManager.Instance.PlayerInventory.Equip(_equipmentObject);
             });
-            bool _isEquipped = GameManager.Instance.PlayerInventory.IsEquipped(_equipmentObject);
-            m_equipButton.gameObject.SetActive(_isEquipped);
-
-            GameManager.Instance.PlayerInventory.OnEquipmentChange += _actualSet =>
-            {
-                bool _isEquipped = _actualSet.Contains(_equipmentObject);
-                m_equipButton.gameObject.SetActive(_isEquipped);
-
-            };
+            UpdateEquipButton(GameManager.Instance.PlayerInventory.ActualSet);
 
         }
 
-        private void OnDestroy()
+        public void UpdateEquipButton(EquipmentObject[] _actualSet)
         {
-            GameManager.Instance.PlayerInventory.OnEquipmentChange -= _actualSet =>
-            {
-                bool _isEquipped = _actualSet.Contains(m_equipmentObject);
-                m_equipButton.gameObject.SetActive(_isEquipped);
-
-            };
+            bool _isEquipped = _actualSet.Contains(m_equipmentObject);
+            m_equipButton.gameObject.SetActive(!_isEquipped);
         }
 
     }

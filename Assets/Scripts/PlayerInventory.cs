@@ -9,6 +9,7 @@ namespace BlueGravity.Inventory
     public class PlayerInventory : MonoBehaviour
     {
         [SerializeField] private EquipmentObject[] m_initialSet = new EquipmentObject[10];
+        [SerializeField] private EquipmentObject[] otherItems = new EquipmentObject[10];
         [Header("Renderer Positions")]
         [SerializeField] private SpriteRenderer hoodRenderer;
         [SerializeField]
@@ -20,7 +21,7 @@ namespace BlueGravity.Inventory
         public event Action<EquipmentObject[]> OnEquipmentChange;
         public event Action<List<EquipmentObject>> OnInventoryChange;
 
-        private void Start()
+        private void Awake()
         {
             OnEquipmentChange += EquipOnSet;
 
@@ -29,6 +30,11 @@ namespace BlueGravity.Inventory
                 AddItemToInventory(_item);
                 Equip(_item);
             }
+            foreach (var _item in otherItems)
+            {
+                AddItemToInventory(_item);
+            }
+
         }
 
         public bool IsEquipped(EquipmentObject _equipmentObject) => ActualSet.Contains(_equipmentObject);
@@ -50,6 +56,13 @@ namespace BlueGravity.Inventory
         {
             if (InventoryItems.Contains(_equipmentObject)) InventoryItems.Remove(_equipmentObject);
             if (OnInventoryChange != null) OnInventoryChange.Invoke(InventoryItems);
+        }
+
+        public List<EquipmentObject> ListOfEquipmentObjectsOfType(EquipmentType _equipmentType)
+        {
+            List<EquipmentObject> _equipmentObjects = new List<EquipmentObject>();
+            foreach (var _item in InventoryItems) if (_item.Type == _equipmentType) _equipmentObjects.Add(_item);
+            return _equipmentObjects;
         }
 
         void EquipOnSet(EquipmentObject[] _actualSet)
