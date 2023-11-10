@@ -71,7 +71,6 @@ namespace BlueGravity.UI
                      }
                      var index = _button.transform.GetSiblingIndex();
                      var _itemTypeList = GameManager.Instance.PlayerInventory.ListOfEquipmentObjectsOfType((EquipmentType)index);
-                     Debug.Log("List Items: " + _itemTypeList.Count + " i: " + index);
                      //Instancing Slots
                      if (_itemTypeList.Count > 0)
                      {
@@ -82,6 +81,9 @@ namespace BlueGravity.UI
                              m_actualSlots.Add(_slot.GetComponent<ItemSlot>());
                          }
                      }
+                     float deltaX = m_slotContentInventoryTransformParent.GetComponent<RectTransform>().sizeDelta.x;
+                     float deltaY = (m_actualSlots.Count) * m_slotItemPrefabs[0].GetComponent<RectTransform>().sizeDelta.y;
+                     m_slotContentInventoryTransformParent.GetComponent<RectTransform>().sizeDelta = new Vector2(deltaX, deltaY);
                  });
             }
         }
@@ -129,8 +131,8 @@ namespace BlueGravity.UI
                 m_actualShopSlots.Add(_slot.GetComponent<ItemShopSlot>());
             }
             float deltaX = m_slotContentShopTransformParent.GetComponent<RectTransform>().sizeDelta.x;
-            float deltaY = (m_actualShopSlots.Count+ 6) * m_slotShopPrefabs[0].GetComponent<RectTransform>().sizeDelta.y;
-            m_slotContentShopTransformParent.GetComponent<RectTransform>().sizeDelta = new Vector2(deltaX,deltaY);
+            float deltaY = (m_actualShopSlots.Count + 6) * m_slotShopPrefabs[0].GetComponent<RectTransform>().sizeDelta.y;
+            m_slotContentShopTransformParent.GetComponent<RectTransform>().sizeDelta = new Vector2(deltaX, deltaY);
         }
 
         private void OpenCloseInventory()
