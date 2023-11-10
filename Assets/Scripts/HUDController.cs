@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using BlueGravity.Core;
 using BlueGravity.Inventory;
+using BlueGravity.Sound;
 using BlueGravity.Tools;
 using TMPro;
 using UnityEngine;
@@ -22,6 +23,7 @@ namespace BlueGravity.UI
 
         [SerializeField] Image[] m_actualSetImages;
         [SerializeField] Button[] m_inventorySetButtons;
+        [SerializeField] Button m_inventoryCloseButton;
         [SerializeField] Color m_buttonSelectedColor;
         [SerializeField] GameObject[] m_slotItemPrefabs;
         [SerializeField] Transform m_slotContentInventoryTransformParent;
@@ -53,10 +55,15 @@ namespace BlueGravity.UI
 
         void SetUpInventoryButtons()
         {
+            m_inventoryCloseButton.onClick.AddListener(() =>
+            {
+                CloseInventory();
+            });
             foreach (var _button in m_inventorySetButtons)
             {
                 _button.onClick.AddListener(() =>
                  {
+                     SoundManager.Instance.PlaySFXSound("Click", transform.position);
                      foreach (var _buttons in m_inventorySetButtons) _buttons.GetComponent<Image>().color = Color.white;
                      _button.GetComponent<Image>().color = m_buttonSelectedColor;
                      if (m_slotContentInventoryTransformParent.childCount > 0)
@@ -93,17 +100,21 @@ namespace BlueGravity.UI
         {
             m_yesShopButton.onClick.AddListener(() =>
             {
+                SoundManager.Instance.PlaySFXSound("Click", transform.position);
                 m_welcomeScreen.SetActive(false);
                 m_buyScreen.SetActive(true);
             });
             m_noShopButton.onClick.AddListener(() =>
             {
+                SoundManager.Instance.PlaySFXSound("Click", transform.position);
                 m_welcomeScreen.SetActive(true);
                 m_buyScreen.SetActive(false);
                 m_shopScreen.SetActive(false);
+                GameManager.Instance.SetPlayerCanMove(true);
             });
             m_quitShopButton.onClick.AddListener(() =>
             {
+                SoundManager.Instance.PlaySFXSound("Click", transform.position);
                 m_welcomeScreen.SetActive(true);
                 m_buyScreen.SetActive(false);
             });
@@ -111,10 +122,12 @@ namespace BlueGravity.UI
 
         public void OpenShop()
         {
+            if (m_shopScreen.activeInHierarchy || m_inventoryObject.activeInHierarchy) return;
+            GameManager.Instance.SetPlayerCanMove(false);
             m_shopScreen.SetActive(true);
             m_welcomeScreen.SetActive(true);
             m_buyScreen.SetActive(false);
-
+            SoundManager.Instance.PlaySFXSound("Click", transform.position);
             if (m_slotContentShopTransformParent.childCount > 0)
                 for (int i = 0; i < m_slotContentShopTransformParent.childCount; i++)
                 {
@@ -137,6 +150,7 @@ namespace BlueGravity.UI
 
         private void OpenCloseInventory()
         {
+
             var _inventoryActive = m_inventoryObject.activeInHierarchy;
             if (_inventoryActive)
             {
@@ -144,20 +158,25 @@ namespace BlueGravity.UI
             }
             else
             {
+                if (m_shopScreen.activeInHierarchy || m_inventoryObject.activeInHierarchy) return;
                 OpenInventory();
             }
         }
 
         private void OpenInventory()
         {
+            SoundManager.Instance.PlaySFXSound("Click", transform.position);
             m_hudObject.SetActive(false);
             m_inventoryObject.SetActive(true);
+            GameManager.Instance.SetPlayerCanMove(false);
         }
 
         private void CloseInventory()
         {
+            SoundManager.Instance.PlaySFXSound("Click", transform.position);
             m_hudObject.SetActive(true);
             m_inventoryObject.SetActive(false);
+            GameManager.Instance.SetPlayerCanMove(true);
         }
 
         private void UpdateGold(int _amount)

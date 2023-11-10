@@ -1,5 +1,6 @@
 using System;
 using BlueGravity.Core;
+using BlueGravity.Sound;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using PlayerInput = BlueGravity.Core.PlayerInput;
@@ -25,6 +26,7 @@ namespace BlueGravity.Tools
 
             m_handler = (InputAction.CallbackContext ctx) =>
             {
+                SoundManager.Instance.PlaySFXSound("Bonus", transform.position);
                 GameManager.Instance.AddMoney(m_amountOfGoldToAdd);
             };
             _playerInput.inputControl.Ground.Interaction.performed += m_handler;

@@ -15,6 +15,13 @@ namespace BlueGravity.Core
 
         private int m_animatorSpeedHash = 0;
 
+        bool m_canMove = true;
+        public void SetCanMove(bool value)
+        {
+            if (!value) Move(Vector2.zero);
+            m_canMove = value;
+        }
+
         void Start()
         {
             m_animatorSpeedHash = Animator.StringToHash("Speed");
@@ -26,6 +33,7 @@ namespace BlueGravity.Core
 
         private void Move(Vector2 _move)
         {
+            if (!m_canMove) return;
             if (_move != Vector2.zero) Flip(_move.x);
             m_rigidBody2D.velocity = new Vector2(_move.x * m_moveSpeed, _move.y * m_moveSpeed);
             m_animator.SetFloat(m_animatorSpeedHash, _move.magnitude);

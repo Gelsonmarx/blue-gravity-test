@@ -6,6 +6,7 @@ using TMPro;
 using BlueGravity.Inventory;
 using BlueGravity.Core;
 using System.Linq;
+using BlueGravity.Sound;
 
 namespace BlueGravity.UI
 {
@@ -21,13 +22,20 @@ namespace BlueGravity.UI
             m_equipmentObject = _equipmentObject;
             m_slotimage.sprite = _equipmentObject.EquipmentSprite[0];
             m_slotItemNameText.text = _equipmentObject.EquipmentName;
-            m_slotItemPriceText.text = "X "+ _equipmentObject.BuyPrice;
+            m_slotItemPriceText.text = "X " + _equipmentObject.BuyPrice;
 
             m_buyButton.onClick.AddListener(() =>
             {
                 bool _hasMoneyEnough = GameManager.Instance.IsEnoughToBuy(_equipmentObject.BuyPrice);
-                if(_hasMoneyEnough) GameManager.Instance.PlayerInventory.AddItemToInventory(_equipmentObject);
-
+                if (_hasMoneyEnough)
+                {
+                    SoundManager.Instance.PlaySFXSound("Shot", transform.position);
+                    GameManager.Instance.PlayerInventory.AddItemToInventory(_equipmentObject);
+                }
+                else
+                {
+                    SoundManager.Instance.PlaySFXSound("Whoosh", transform.position);
+                }
             });
             UpdateBuyButton(GameManager.Instance.PlayerInventory.InventoryItems);
         }

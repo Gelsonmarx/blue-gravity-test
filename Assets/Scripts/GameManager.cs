@@ -12,10 +12,11 @@ namespace BlueGravity.Core
         public int Gold { get; private set; } = 0;
         public event Action<int> OnWalletChange;
 
-        public PlayerInventory PlayerInventory {get; private set;}
-        public NPCShop NPCShop {get; private set;}
+        public PlayerInventory PlayerInventory { get; private set; }
+        public NPCShop NPCShop { get; private set; }
 
-        private void Awake() {
+        private void Awake()
+        {
             PlayerInventory = FindObjectOfType<PlayerInventory>();
             NPCShop = FindObjectOfType<NPCShop>();
         }
@@ -25,10 +26,11 @@ namespace BlueGravity.Core
             AddMoney(initialGold);
         }
 
-        public bool IsEnoughToBuy(int _amount) {
+        public bool IsEnoughToBuy(int _amount)
+        {
 
             bool _enough = _amount <= Gold;
-            if(_enough) SubtractMoney(_amount);
+            if (_enough) SubtractMoney(_amount);
             return _enough;
 
         }
@@ -43,6 +45,11 @@ namespace BlueGravity.Core
         {
             Gold -= _amount;
             if (OnWalletChange != null) OnWalletChange.Invoke(Gold);
+        }
+
+        public void SetPlayerCanMove(bool value)
+        {
+            PlayerInventory.GetComponent<PlayerMovement>().SetCanMove(value);
         }
     }
 }

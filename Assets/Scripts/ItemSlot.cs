@@ -6,6 +6,7 @@ using TMPro;
 using BlueGravity.Inventory;
 using BlueGravity.Core;
 using System.Linq;
+using BlueGravity.Sound;
 
 namespace BlueGravity.UI
 {
@@ -23,6 +24,7 @@ namespace BlueGravity.UI
             m_slotItemNameText.text = _equipmentObject.EquipmentName;
             m_equipButton.onClick.AddListener(() =>
             {
+                SoundManager.Instance.PlaySFXSound("Shot", transform.position);
                 GameManager.Instance.PlayerInventory.Equip(_equipmentObject);
             });
             UpdateEquipButton(GameManager.Instance.PlayerInventory.ActualSet);
