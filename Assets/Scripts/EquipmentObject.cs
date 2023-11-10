@@ -11,6 +11,7 @@ namespace BlueGravity.Inventory
         public string EquipmentName;
         public Sprite[] EquipmentSprite;
         public EquipmentType Type;
+        public int BuyPrice = 15;
     }
 
 }

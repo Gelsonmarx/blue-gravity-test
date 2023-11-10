@@ -6,6 +6,7 @@ using BlueGravity.Inventory;
 using BlueGravity.Tools;
 using TMPro;
 using UnityEngine;
+using UnityEngine.InputSystem.Interactions;
 using UnityEngine.UI;
 
 namespace BlueGravity.UI
@@ -23,9 +24,16 @@ namespace BlueGravity.UI
         [SerializeField] Button[] m_inventorySetButtons;
         [SerializeField] Color m_buttonSelectedColor;
         [SerializeField] GameObject[] m_slotItemPrefabs;
-        [SerializeField] Transform m_slotContentTransformParent;
-
+        [SerializeField] Transform m_slotContentInventoryTransformParent;
         List<ItemSlot> m_actualSlots = new List<ItemSlot>();
+
+        [Header("Shop")]
+
+        [SerializeField] GameObject[] m_slotShopPrefabs;
+        [SerializeField] Transform m_slotContentShopTransformParent;
+        [SerializeField] Button m_yesShopButton, m_noShopButton, m_quitShopButton;
+        [SerializeField] GameObject m_welcomeScreen, m_buyScreen, m_shopScreen;
+        List<ItemShopSlot> m_actualShopSlots = new List<ItemShopSlot>();
 
         private void Awake()
         {
@@ -35,9 +43,11 @@ namespace BlueGravity.UI
         private void Start()
         {
             GameManager.Instance.PlayerInventory.OnEquipmentChange += UpdateSetImagesAndSlots;
+            GameManager.Instance.PlayerInventory.OnInventoryChange += UpdateShopSlots;
             var playerInput = GameManager.Instance.PlayerInventory.GetComponent<PlayerInput>();
             playerInput.inputControl.Ground.Inventory.performed += action => OpenCloseInventory();
             SetUpInventoryButtons();
+            SetUpShopButtons();
         }
 
 
@@ -47,14 +57,14 @@ namespace BlueGravity.UI
             {
                 _button.onClick.AddListener(() =>
                  {
-
-                     //  m_inventorySetButtons[i].GetComponent<Image>().color = m_buttonSelectedColor;
-                     if (m_slotContentTransformParent.childCount > 0)
+                     foreach (var _buttons in m_inventorySetButtons) _buttons.GetComponent<Image>().color = Color.white;
+                     _button.GetComponent<Image>().color = m_buttonSelectedColor;
+                     if (m_slotContentInventoryTransformParent.childCount > 0)
                      {
                          //Cleaning
-                         for (int j = 0; j < m_slotContentTransformParent.childCount; j++)
+                         for (int j = 0; j < m_slotContentInventoryTransformParent.childCount; j++)
                          {
-                             var _slotObj = m_slotContentTransformParent.GetChild(j).gameObject.GetComponent<ItemSlot>();
+                             var _slotObj = m_slotContentInventoryTransformParent.GetChild(j).gameObject.GetComponent<ItemSlot>();
                              m_actualSlots.Remove(_slotObj);
                              Destroy(_slotObj.gameObject);
                          }
@@ -67,15 +77,60 @@ namespace BlueGravity.UI
                      {
                          foreach (var _itemType in _itemTypeList)
                          {
-                             var _slot = Instantiate(m_slotItemPrefabs[index], m_slotContentTransformParent);
+                             var _slot = Instantiate(m_slotItemPrefabs[index], m_slotContentInventoryTransformParent);
                              _slot.GetComponent<ItemSlot>().InitSlot(_itemType);
                              m_actualSlots.Add(_slot.GetComponent<ItemSlot>());
                          }
                      }
-
-
                  });
             }
+        }
+
+
+        private void SetUpShopButtons()
+        {
+            m_yesShopButton.onClick.AddListener(() =>
+            {
+                m_welcomeScreen.SetActive(false);
+                m_buyScreen.SetActive(true);
+            });
+            m_noShopButton.onClick.AddListener(() =>
+            {
+                m_welcomeScreen.SetActive(true);
+                m_buyScreen.SetActive(false);
+                m_shopScreen.SetActive(false);
+            });
+            m_quitShopButton.onClick.AddListener(() =>
+            {
+                m_welcomeScreen.SetActive(true);
+                m_buyScreen.SetActive(false);
+            });
+        }
+
+        public void OpenShop()
+        {
+            m_shopScreen.SetActive(true);
+            m_welcomeScreen.SetActive(true);
+            m_buyScreen.SetActive(false);
+
+            if (m_slotContentShopTransformParent.childCount > 0)
+                for (int i = 0; i < m_slotContentShopTransformParent.childCount; i++)
+                {
+                    var _shopSlot = m_slotContentShopTransformParent.GetChild(i).GetComponent<ItemShopSlot>();
+                    m_actualShopSlots.Remove(_shopSlot);
+                    Destroy(_shopSlot.gameObject);
+                }
+
+            foreach (var item in GameManager.Instance.NPCShop.equipmentObjectsShopList)
+            {
+                var index = (int)item.Type;
+                var _slot = Instantiate(m_slotShopPrefabs[index], m_slotContentShopTransformParent);
+                _slot.GetComponent<ItemShopSlot>().InitShopSlot(item);
+                m_actualShopSlots.Add(_slot.GetComponent<ItemShopSlot>());
+            }
+            float deltaX = m_slotContentShopTransformParent.GetComponent<RectTransform>().sizeDelta.x;
+            float deltaY = (m_actualShopSlots.Count+ 6) * m_slotShopPrefabs[0].GetComponent<RectTransform>().sizeDelta.y;
+            m_slotContentShopTransformParent.GetComponent<RectTransform>().sizeDelta = new Vector2(deltaX,deltaY);
         }
 
         private void OpenCloseInventory()
@@ -83,14 +138,24 @@ namespace BlueGravity.UI
             var _inventoryActive = m_inventoryObject.activeInHierarchy;
             if (_inventoryActive)
             {
-                m_hudObject.SetActive(true);
-                m_inventoryObject.SetActive(false);
+                CloseInventory();
             }
             else
             {
-                m_hudObject.SetActive(false);
-                m_inventoryObject.SetActive(true);
+                OpenInventory();
             }
+        }
+
+        private void OpenInventory()
+        {
+            m_hudObject.SetActive(false);
+            m_inventoryObject.SetActive(true);
+        }
+
+        private void CloseInventory()
+        {
+            m_hudObject.SetActive(true);
+            m_inventoryObject.SetActive(false);
         }
 
         private void UpdateGold(int _amount)
@@ -110,6 +175,15 @@ namespace BlueGravity.UI
             foreach (var _slot in m_actualSlots)
             {
                 _slot.UpdateEquipButton(_actualSet);
+            }
+        }
+
+        private void UpdateShopSlots(List<EquipmentObject> _inventoryItems)
+        {
+            if (m_actualShopSlots.Count <= 0) return;
+            foreach (var _slot in m_actualShopSlots)
+            {
+                _slot.UpdateBuyButton(_inventoryItems);
             }
         }
 
